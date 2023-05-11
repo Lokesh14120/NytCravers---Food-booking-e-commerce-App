@@ -1,0 +1,108 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0 , maximum-scale=1.0, user-scalable=0" />
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <style>
+    .chart {
+      width: 100%;
+      min-height: 640px;
+    }
+
+    .row {
+      margin: 0 !important;
+    }
+  </style>
+</head>
+<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+
+<body>
+
+  <% var test=foods; %>
+    <% var total=totalOrders; %>
+    <h1 class="font-bold text-green-700 text-lg mb-8 mt-4 underline md:text-2xl">Rank Chart</h1>
+      <!-- <section class="px-2 mx-4 md:px-8 xl:px-12 md:mx-8 xl:mx-12 mt-12 md:py-8 mx-auto mt-16"> -->
+        <div class="container max-w-max mx-auto px-3">
+          <!-- <h1 class="font-bold text-green-700 text-lg mb-4 underline md:text-2xl">Rank List</h1> -->
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <h1 class="font-bold text-green-700 text-lg mb-4 underline md:text-2xl">Rank Chart</h1>
+
+                </div>
+                <div class="col-md-4 col-md-offset-4">
+                  <hr />
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-6">
+                  <div id="top_x_div" class="chart"></div>
+                </div>
+
+              </div>
+        </div>
+      <!-- </section> -->
+</body>
+<script type="text/javascript">
+  var getTest = "<%= test  %>";
+  var totals = "<%= total  %>";
+  let ind1 = 0
+  let ind2 = 0;
+  let ct = 0;
+  let arr = []
+  let num = []
+
+  while (ind2 < getTest.length) {
+    if (getTest[ind2] === ',') {
+      ct++;
+      let result = getTest.substring(ind1, ind2);
+      num.push(result)
+      ind2++;
+      ind1 = ind2;
+    }
+    if (ct == 2) {
+      ct = 0;
+      arr.push(num);
+      num = []
+    }
+    ind2++;
+  }
+  arr.re
+  google.charts.load('current', { callback: function () {
+    drawStuff();
+    window.addEventListener('resize', drawStuff, false);
+  },'packages': ['bar'] });
+  google.charts.setOnLoadCallback(drawStuff);
+
+  function drawStuff() {
+
+
+    var data = new google.visualization.arrayToDataTable(arr);
+    var options = {
+      title: 'Food Item Sale Count',
+      width: 900,
+      'is3D':true,
+      legend: { position: 'none' },
+      animation:{
+      duration: 1000,
+      easing: 'linear',
+      startup: true
+    },
+      chart: {
+        title: 'Food Item Sale Count',
+        subtitle: 'Popularity by count'
+      },
+      bars: 'horizontal', // Required for Material Bar Charts.
+      axes: {
+        x: {
+          0: { side: 'top', label: 'Count' } // Top x-axis.
+        }
+      },
+      bar: { groupWidth: "90%" }
+    };
+
+    var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+    chart.draw(data, options);
+  };
+</script>
+
+</html>
